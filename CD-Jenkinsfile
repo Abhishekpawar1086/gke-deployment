@@ -1,1 +1,61 @@
+pipeline {
+    agent any
 
+    environment {
+        // Define environment variables
+        GCP_PROJECT = 'devops-practice-451710'
+        GKE_CLUSTER = 'my-gke-cluster'
+        GKE_ZONE = 'us-central1-a'
+        //HELM_CHART_PATH = 'path/to/your/helm/chart'
+        DOCKER_IMAGE = 'gcr.io/your-gcp-project-id/your-react-app:latest'
+        NAMESPACE = 'react-gke'
+    }
+
+    stages {
+        stage('Checkout Helm Charts') {
+            steps {
+                // Checkout the code from your repository
+                 git branch: 'main', credentialsId: 'github-user-cred', url: 'https://github.com/Abhishekpawar1086/gke-deployment.git'
+            }
+        }
+
+       
+        stage('Configure kubectl') {
+            steps {
+                script {
+                    // Authenticate to GKE
+                    sh "gcloud container clusters get-credentials ${GKE_CLUSTER} --zone ${GKE_ZONE} --project ${GCP_PROJECT}"
+                }
+            }
+        }
+
+        stage('Deploy to GKE using Helm') {
+            steps {
+                script {
+                    // Deploy the application using Helm
+                    sh "helm upgrade --install react-app  --set image_tag=${image_tag}"
+                }
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                script {
+                    // Verify the deployment
+                    sh "kubectl get pods -n ${NAMESPACE}"
+                    sh "kubectl get svc -n ${NAMESPACE}"
+                    sh "kubectl get ingress -n ${NAMESPACE}"
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment to GKE using Helm was successful!'
+        }
+        failure {
+            echo 'Deployment to GKE using Helm failed!'
+        }
+    }
+}
