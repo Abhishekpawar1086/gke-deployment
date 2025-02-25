@@ -7,7 +7,7 @@ spec:
   selector:
     matchLabels:
       app: react-gke
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   template:
     metadata:
       labels:
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: react-gke-backend-container
-          image: "us-central1-docker.pkg.dev/devops-practice-451710/docker-images/frontend-reactjs-app:{{ .Values.image.tag }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: Always
           resources:
             limits:
