@@ -1,1 +1,4 @@
-
+image:
+  repository: us-central1-docker.pkg.dev/devops-practice-451710/docker-images/frontend-reactjs-app
+# Deployment configuration
+replicaCount: 1
