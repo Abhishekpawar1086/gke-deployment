@@ -33,7 +33,7 @@ pipeline {
             steps {
                 script {
                     // Deploy the application using Helm
-                    sh "helm upgrade --install react-app ./ --set image_tag=${image_tag}"
+                    sh "helm upgrade react-app ./ --set image_tag=${image_tag}"
                 }
             }
         }
