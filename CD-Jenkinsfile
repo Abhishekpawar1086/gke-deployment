@@ -44,7 +44,6 @@ pipeline {
                     // Verify the deployment
                     sh "kubectl get pods -n ${NAMESPACE}"
                     sh "kubectl get svc -n ${NAMESPACE}"
-                    sh "kubectl get ingress -n ${NAMESPACE}"
                 }
             }
         }
